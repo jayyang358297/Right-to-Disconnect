@@ -25,8 +25,6 @@
             background-color: #379BB2;
             background-image: none;
             transition: background 0.5s ease; /* 保留背景切換動畫 */
-            display: flex;
-            flex-direction: column;
         }
 
         /* 為了模擬圖片中的背景斑點，我們創建一些裝飾性元素 */
@@ -82,7 +80,7 @@
     <div class="deco-shape" style="width: 80px; height: 80px; top: 50%; left: 20%;"></div>
 
     <!-- 頂部圖標 -->
-    <header class="relative z-20 p-4 sm:p-6 text-white flex-shrink-0">
+    <header class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white">
         <div class="flex justify-between items-center">
             <!-- 左側圖標 -->
             <div class="flex items-center space-x-4">
@@ -91,6 +89,16 @@
                     <svg id="volume-on-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
                     <!-- 聲音關閉 (靜音) 圖標 (預設隱藏) -->
                     <svg id="volume-off-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9l4 4m0-4l-4 4" /></svg>
+                </button>
+                <button id="fullscreen-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
+                    <!-- 進入全螢幕圖標 -->
+                    <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5-5M4 16v4m0 0h4m-4 0l5-5m11 5h-4m4 0v4m0 0l-5-5" />
+                    </svg>
+                    <!-- 退出全螢幕圖標 -->
+                    <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10h6V4M4 20h6v-6M20 4l-6 6M4 20l6-6" />
+                    </svg>
                 </button>
             </div>
 
@@ -103,7 +111,7 @@
     </header>
 
     <!-- 主內容區域 -->
-    <main id="main-content" class="flex-grow flex items-center justify-center p-4">
+    <main id="main-content" class="w-full h-screen flex items-center justify-center p-4">
         <div class="embed-container bg-white rounded-2xl shadow-2xl overflow-hidden ring-2 ring-white/30">
             <iframe id="content-iframe" src="https://example.com" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
@@ -171,12 +179,16 @@
         const modalCloseBtn = document.getElementById('modal-close-btn');
         const modalIframe = document.getElementById('modal-iframe');
 
-        const mainContent = document.getElementById('main-content');
         const decoShapes = document.querySelectorAll('.deco-shape');
 
         const volumeBtn = document.getElementById('volume-btn');
         const volumeOnIcon = document.getElementById('volume-on-icon');
         const volumeOffIcon = document.getElementById('volume-off-icon');
+
+        const fullscreenBtn = document.getElementById('fullscreen-btn');
+        const fullscreenEnterIcon = document.getElementById('fullscreen-enter-icon');
+        const fullscreenExitIcon = document.getElementById('fullscreen-exit-icon');
+
         const contentIframe = document.getElementById('content-iframe');
         
         // --- 狀態與常數 ---
@@ -300,6 +312,30 @@
             volumeOffIcon.classList.toggle('hidden', !isMuted);
         }
         volumeBtn.addEventListener('click', toggleMute);
+
+        // --- 全螢幕控制 ---
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function updateFullscreenIcon() {
+            if (document.fullscreenElement) {
+                fullscreenEnterIcon.classList.add('hidden');
+                fullscreenExitIcon.classList.remove('hidden');
+            } else {
+                fullscreenEnterIcon.classList.remove('hidden');
+                fullscreenExitIcon.classList.add('hidden');
+            }
+        }
+
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
 
     </script>
 </body>
