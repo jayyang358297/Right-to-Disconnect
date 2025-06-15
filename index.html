@@ -6,10 +6,10 @@
     <title>可嵌入內容的網頁模板</title>
     <!-- 引入 Tailwind CSS 以進行快速樣式設計 -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Google Fonts 的 Inter 字體 -->
+    <!-- 引入 Google Fonts 的 DotGothic16 字體 -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
     <style>
         /* 自定義樣式 */
         html, body {
@@ -20,8 +20,8 @@
         }
         
         body {
-            font-family: 'Inter', sans-serif;
-            /* 更新為指定的藍色背景 */
+            /* 更新為指定的像素字體 */
+            font-family: 'DotGothic16', sans-serif;
             background-color: #379BB2;
             background-image: none;
             transition: background 0.5s ease; /* 保留背景切換動畫 */
@@ -31,12 +31,11 @@
         .deco-shape {
             position: absolute;
             border-radius: 50%;
-            /* 更新裝飾元素的顏色以搭配新背景 */
             background-color: rgba(255, 255, 255, 0.1);
             filter: blur(10px);
             opacity: 0.8;
-            transition: opacity 0.5s ease; /* 保留裝飾元素淡出動畫 */
-            pointer-events: none; /* 讓裝飾物不影響點擊 */
+            transition: opacity 0.5s ease;
+            pointer-events: none;
         }
         
         /* 調整主要嵌入框架的尺寸為 393x852 */
@@ -44,7 +43,7 @@
             .embed-container {
                  width: 393px;
                  height: 852px;
-                 max-height: 90vh; /* 在桌面上限制最大高度 */
+                 max-height: 90vh;
             }
         }
         
@@ -62,10 +61,14 @@
         /* 彈出視窗內容框的樣式 */
         #modal-content-container {
             width: 393px;
-            height: 700px; /* 更新高度為 700px */
-            /* 如果螢幕太小，則進行縮放以適應視窗 */
+            height: 700px;
             max-width: 95vw;
             max-height: 95vh;
+        }
+        
+        /* 讓像素圖標更清晰 */
+        svg {
+            image-rendering: pixelated;
         }
 
     </style>
@@ -84,49 +87,44 @@
         <div class="flex justify-between items-center">
             <!-- 左側圖標 -->
             <div class="flex items-center space-x-4">
-                <button id="volume-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
-                    <!-- 聲音開啟圖標 -->
-                    <svg id="volume-on-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
-                    <!-- 聲音關閉 (靜音) 圖標 (預設隱藏) -->
-                    <svg id="volume-off-icon" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9l4 4m0-4l-4 4" /></svg>
-                </button>
-                <button id="fullscreen-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
-                    <!-- 進入全螢幕圖標 (更新) -->
-                    <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                    <!-- 退出全螢幕圖標 (更新) -->
-                    <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6 hidden"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+                <button id="fullscreen-btn" class="p-2 rounded-none hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
+                    <!-- 像素風進入全螢幕圖標 -->
+                    <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"><path d="M5 3h2v4H3V5h2V3zm2 18H5v-2H3v4h4v-2zm12-2h-2v4h4v-2h-2v-2zm2-16h-2V3h-2v4h4V5z"/></svg>
+                    <!-- 像素風退出全螢幕圖標 -->
+                    <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 hidden"><path d="M3 7h4V5H5V3H3v4zm14-4v2h2v2h2V3h-4zm2 14h-2v2h-2v2h4v-4zm-16 2v-2H3v-2H1v4h4z"/></svg>
                 </button>
             </div>
 
             <!-- 右側選單按鈕 -->
-            <button id="menu-open-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
-                <!-- 漢堡選單圖標 -->
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            <button id="menu-open-btn" class="p-2 rounded-none hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
+                <!-- 像素風漢堡選單圖標 -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
             </button>
         </div>
     </header>
 
     <!-- 主內容區域 -->
     <main id="main-content" class="w-full h-screen flex items-center justify-center p-4">
-        <div class="embed-container bg-white rounded-2xl shadow-2xl overflow-hidden ring-2 ring-white/30">
+        <div class="embed-container bg-white rounded-none shadow-2xl overflow-hidden ring-2 ring-white/30">
             <iframe id="content-iframe" src="https://example.com" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </main>
 
     <!-- 全螢幕選單 -->
     <div id="fullscreen-menu" class="fixed inset-0 z-40 backdrop-blur-sm p-4 text-white opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out" style="background-color: rgba(55, 155, 178, 0.9);">
-        <button id="menu-close-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white hover:text-gray-200">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+        <button id="menu-close-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white p-2 rounded-none hover:bg-white/20">
+            <!-- 像素風關閉圖標 -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
             <div class="text-4xl font-bold text-white mb-12">[LOGO]</div>
             <nav>
                 <ul class="space-y-6">
-                    <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-lg hover:bg-white/20 transition-colors">回到遊戲</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-lg hover:bg-white/20 transition-colors" data-src="https://breezy-guest-982518.framer.app/">認識離線權</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-lg hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/">教育現場的故事</a></li>
-                    <li><a href="https://unews.nccu.edu.tw/unews/disconnect/" target="_blank" rel="noopener noreferrer" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-lg hover:bg-white/20 transition-colors">報導全文</a></li>
-                    <li><a href="#" id="about-us-btn" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-lg hover:bg-white/20 transition-colors" data-src="https://convex-level-045910.framer.app/">製作團隊</a></li>
+                    <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://breezy-guest-982518.framer.app/">認識離線權</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/">教育現場的故事</a></li>
+                    <li><a href="https://unews.nccu.edu.tw/unews/disconnect/" target="_blank" rel="noopener noreferrer" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">報導全文</a></li>
+                    <li><a href="#" id="about-us-btn" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://convex-level-045910.framer.app/">製作團隊</a></li>
                 </ul>
             </nav>
         </div>
@@ -134,26 +132,26 @@
     
     <!-- 用於嵌入內容的彈出視窗 (Modal) -->
     <div id="embed-modal" class="fixed inset-0 bg-black/60 p-4 py-8 flex justify-center items-start overflow-y-auto hidden z-50">
-        <div id="modal-content-container" class="bg-white rounded-2xl shadow-lg flex flex-col scale-95 opacity-0 transition-all duration-300 ring-4 ring-white/50 mt-8 mb-8">
+        <div id="modal-content-container" class="bg-white rounded-none shadow-lg flex flex-col scale-95 opacity-0 transition-all duration-300 ring-4 ring-white/50 mt-8 mb-8">
             <!-- 彈出視窗的標題和關閉按鈕 -->
             <div class="flex-shrink-0 flex justify-end items-center p-2 border-b">
-                <button id="modal-close-btn" class="p-2 text-gray-500 rounded-full hover:bg-gray-100 hover:text-gray-800">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                <button id="modal-close-btn" class="p-2 text-gray-500 rounded-none hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
                 </button>
             </div>
             <!-- 用於載入內容的 iframe -->
             <div class="flex-grow p-1">
-                 <iframe id="modal-iframe" src="" class="w-full h-full border-0 rounded-b-lg" title="彈出視窗嵌入內容" allowfullscreen></iframe>
+                 <iframe id="modal-iframe" src="" class="w-full h-full border-0" title="彈出視窗嵌入內容" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
     <!-- 全螢幕建議彈出視窗 -->
     <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-lg p-6 max-w-sm w-full text-center">
+        <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
             <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
             <p class="text-gray-600 mb-4">建議點擊左上角的全螢幕按鈕，以獲得最佳的互動體驗。</p>
-            <button id="suggestion-close-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-lg w-full">我知道了</button>
+            <button id="suggestion-close-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-none w-full border-2 border-black">我知道了</button>
         </div>
     </div>
 
@@ -177,10 +175,6 @@
 
         const decoShapes = document.querySelectorAll('.deco-shape');
 
-        const volumeBtn = document.getElementById('volume-btn');
-        const volumeOnIcon = document.getElementById('volume-on-icon');
-        const volumeOffIcon = document.getElementById('volume-off-icon');
-
         const fullscreenBtn = document.getElementById('fullscreen-btn');
         const fullscreenEnterIcon = document.getElementById('fullscreen-enter-icon');
         const fullscreenExitIcon = document.getElementById('fullscreen-exit-icon');
@@ -188,7 +182,6 @@
         const contentIframe = document.getElementById('content-iframe');
         
         // --- 狀態與常數 ---
-        let isMuted = false;
         const originalGameUrl = contentIframe.src;
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
 
@@ -297,27 +290,6 @@
                 }
             }
         });
-
-        // --- 音量控制 ---
-        function toggleMute() {
-            isMuted = !isMuted;
-            const mediaElements = document.querySelectorAll('audio, video');
-            mediaElements.forEach(el => {
-                el.muted = isMuted;
-            });
-            try {
-                if (isMuted && contentIframe.src.includes('youtube.com')) {
-                   const url = new URL(contentIframe.src);
-                   url.searchParams.set('mute', '1');
-                   contentIframe.src = url.toString();
-                }
-            } catch (error) {
-                console.warn("無法直接控制 IFrame 的聲音:", error);
-            }
-            volumeOnIcon.classList.toggle('hidden', isMuted);
-            volumeOffIcon.classList.toggle('hidden', !isMuted);
-        }
-        volumeBtn.addEventListener('click', toggleMute);
 
         // --- 全螢幕控制 ---
         function toggleFullScreen() {
