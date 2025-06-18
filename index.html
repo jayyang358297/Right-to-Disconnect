@@ -184,9 +184,27 @@
         // --- 狀態與常數 ---
         const originalGameUrl = contentIframe.src;
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
+        
+        // --- 載入內容的統一函式 (NEW) ---
+        function loadContent(url) {
+            if (url) {
+                if (url === storiesUrl) {
+                    setBlackBackground();
+                } else {
+                    setOriginalBackground();
+                }
+                contentIframe.src = url;
+            }
+        }
 
-        // --- 初始載入 ---
+       // --- 初始載入 ---
         window.addEventListener('load', () => {
+            // 檢查 URL hash 來決定初始載入內容
+            if (window.location.hash === '#stories') {
+                loadContent(storiesUrl);
+            } else {
+                loadContent(originalGameUrl);
+            }
             suggestionModal.classList.remove('hidden');
         });
 
@@ -243,13 +261,12 @@
              suggestionModal.classList.add('hidden');
         });
 
-        // --- 選單項目互動 ---
+       // --- 選單項目互動 ---
         
         // "回到遊戲" 按鈕的事件監聽
         backToGameBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            setOriginalBackground(); // 恢復原始背景
-            contentIframe.src = originalGameUrl; // 恢復成原始遊戲畫面
+            loadContent(originalGameUrl); // 使用統一的函式載入原始遊戲
             closeMenu();
         });
         
@@ -258,19 +275,12 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = item.dataset.src;
-                if (url) {
-                    if (url === storiesUrl) {
-                        setBlackBackground();
-                    } else {
-                        setOriginalBackground();
-                    }
-                    contentIframe.src = url; 
-                    closeMenu();
-                }
+                loadContent(url); // 使用統一的函式載入內容
+                closeMenu();
             });
         });
 
-        // "製作團隊" 按鈕打開彈出視窗
+        // "製作團隊" 按鈕打開彈出視窗 (此部分邏輯不變，但放在一起方便您對照)
         aboutUsBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const url = aboutUsBtn.dataset.src;
