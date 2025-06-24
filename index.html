@@ -106,7 +106,7 @@
     <!-- 主內容區域 -->
     <main id="main-content" class="w-full h-screen flex items-center justify-center p-4">
         <div class="embed-container bg-white rounded-none shadow-2xl overflow-hidden ring-2 ring-white/30">
-            <iframe id="content-iframe" src="https://example.com" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe id="content-iframe" src="https://gamejolt.net/?token=TWrWpXCDLVrXHg2c7LUFbBrLXXkAAP" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </main>
 
@@ -121,7 +121,7 @@
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://obvious-fancy-565920.framer.app/">認識離線權</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://breezy-guest-982518.framer.app/">認識離線權</a></li>
                     <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/">教育現場的故事</a></li>
                     <li><a href="https://unews.nccu.edu.tw/unews/disconnect/" target="_blank" rel="noopener noreferrer" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">報導全文</a></li>
                     <li><a href="#" id="about-us-btn" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://convex-level-045910.framer.app/">製作團隊</a></li>
@@ -182,9 +182,9 @@
         const contentIframe = document.getElementById('content-iframe');
         
         // --- 狀態與常數 ---
-        const originalGameUrl = contentIframe.src;
+        const originalGameUrl = 'https://gamejolt.net/?token=TWrWpXCDLVrXHg2c7LUFbBrLXXkAAP';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
-        
+
         // --- 載入內容的統一函式 (NEW) ---
         function loadContent(url) {
             if (url) {
@@ -197,14 +197,14 @@
             }
         }
 
-       // --- 初始載入 ---
+        // --- 初始載入 ---
         window.addEventListener('load', () => {
             // 檢查 URL hash 來決定初始載入內容
             if (window.location.hash === '#stories') {
                 loadContent(storiesUrl);
-            } else {
-                loadContent(originalGameUrl);
             }
+            // 預設就載入遊戲，不需特別處理
+            
             suggestionModal.classList.remove('hidden');
         });
 
@@ -261,7 +261,7 @@
              suggestionModal.classList.add('hidden');
         });
 
-       // --- 選單項目互動 ---
+        // --- 選單項目互動 ---
         
         // "回到遊戲" 按鈕的事件監聽
         backToGameBtn.addEventListener('click', (e) => {
@@ -280,7 +280,7 @@
             });
         });
 
-        // "製作團隊" 按鈕打開彈出視窗 (此部分邏輯不變，但放在一起方便您對照)
+        // "製作團隊" 按鈕打開彈出視窗
         aboutUsBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const url = aboutUsBtn.dataset.src;
