@@ -125,7 +125,7 @@
     <!-- 主內容區域 -->
     <main id="main-content" class="w-full h-screen flex items-center justify-center p-4">
         <div class="embed-container bg-white rounded-none shadow-2xl overflow-hidden ring-2 ring-white/30">
-            <iframe frameborder="0" src="https://itch.io/embed-upload/14130756?color=333333" allowfullscreen="" width="393" height="872"><a href="https://jayyang358297.itch.io/teacher">Play 教師離線權 on itch.io</a></iframe>
+            <iframe id="content-iframe" src="https://itch.io/embed-upload/14130756?color=333333" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </main>
 
@@ -136,7 +136,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
-            <div class="text-4xl font-bold text-white mb-12">教師離線權</div>
+            <div class="text-4xl font-bold text-white mb-12">[LOGO]</div>
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
@@ -168,7 +168,7 @@
     <!-- 全螢幕建議彈出視窗 -->
     <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
-            <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
             <p class="text-gray-600 mb-4">建議點擊左上角的全螢幕按鈕，以獲得最佳的互動體驗。</p>
             <button id="suggestion-close-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-none w-full border-2 border-black">我知道了</button>
         </div>
@@ -176,7 +176,6 @@
 
     <!-- Cover Page -->
     <div id="cover-page" class="fixed inset-0 bg-[#379BB2] z-[100] cursor-pointer">
-        <!-- 將下方的 src 換成您自己的圖片網址 -->
         <!-- 電腦版封面圖片 -->
         <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%20(1).png?raw=true" alt="桌面版封面" class="cover-desktop w-full h-full object-cover">
         <!-- 手機版封面圖片 -->
@@ -212,7 +211,7 @@
         const coverPage = document.getElementById('cover-page');
         
         // --- 狀態與常數 ---
-        const originalGameUrl = 'https://gamejolt.net/?token=TWrWpXCDLVrXHg2c7LUFbBrLXXkAAP';
+        const originalGameUrl = 'https://itch.io/embed-upload/14130756?color=333333';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
         let isHeaderHidden = false; // 用於行動裝置的沉浸模式
 
