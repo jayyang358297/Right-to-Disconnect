@@ -56,7 +56,7 @@
         }
 
         /* 確保彈出視窗顯示在最上層 */
-        #embed-modal, #fullscreen-suggestion-modal {
+        #embed-modal, #fullscreen-suggestion-modal, #cover-page {
             z-index: 50;
         }
         
@@ -69,8 +69,21 @@
         }
         
         /* 讓像素圖標更清晰 */
-        svg {
+        .pixelated {
             image-rendering: pixelated;
+        }
+
+        #cover-page {
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* 響應式封面圖的判斷邏輯 */
+        .cover-mobile { display: block; } /* 手機版預設顯示 */
+        .cover-desktop { display: none; }  /* 電腦版預設隱藏 */
+
+        @media (min-width: 768px) { /* 當螢幕寬度大於 768px (平板/電腦) */
+            .cover-mobile { display: none; }  /* 隱藏手機版 */
+            .cover-desktop { display: block; } /* 顯示電腦版 */
         }
 
     </style>
@@ -85,22 +98,26 @@
     <div class="deco-shape" style="width: 80px; height: 80px; top: 50%; left: 20%;"></div>
 
     <!-- 頂部圖標 -->
-    <header class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white transition-transform duration-300 ease-in-out">
         <div class="flex justify-between items-center">
             <!-- 左側圖標 -->
             <div class="flex items-center space-x-4">
-                <button id="fullscreen-btn" class="p-2 rounded-none hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
-                    <!-- 像素風進入全螢幕圖標 -->
-                    <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"><path d="M5 3h2v4H3V5h2V3zm2 18H5v-2H3v4h4v-2zm12-2h-2v4h4v-2h-2v-2zm2-16h-2V3h-2v4h4V5z"/></svg>
-                    <!-- 像素風退出全螢幕圖標 -->
-                    <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 hidden"><path d="M3 7h4V5H5V3H3v4zm14-4v2h2v2h2V3h-4zm2 14h-2v2h-2v2h4v-4zm-16 2v-2H3v-2H1v4h4z"/></svg>
+                <button id="fullscreen-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
+                    <!-- 標準進入全螢幕圖標 -->
+                    <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                    </svg>
+                    <!-- 標準退出全螢幕圖標 -->
+                    <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 hidden">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
+                    </svg>
                 </button>
             </div>
 
             <!-- 右側選單按鈕 -->
             <button id="menu-open-btn" class="p-2 rounded-none hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
                 <!-- 像素風漢堡選單圖標 -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 pixelated"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
             </button>
         </div>
     </header>
@@ -108,7 +125,7 @@
     <!-- 主內容區域 -->
     <main id="main-content" class="w-full h-screen flex items-center justify-center p-4">
         <div class="embed-container bg-white rounded-none shadow-2xl overflow-hidden ring-2 ring-white/30">
-            <iframe id="content-iframe" src="https://itch.io/embed-upload/14099767?color=333333" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe id="content-iframe" src="https://gamejolt.net/?token=TWrWpXCDLVrXHg2c7LUFbBrLXXkAAP" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </main>
 
@@ -116,10 +133,10 @@
     <div id="fullscreen-menu" class="fixed inset-0 z-40 backdrop-blur-sm p-4 text-white opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out" style="background-color: rgba(55, 155, 178, 0.9);">
         <button id="menu-close-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white p-2 rounded-none hover:bg-white/20">
             <!-- 像素風關閉圖標 -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
-            <div class="text-4xl font-bold text-white mb-12">教師離線權</div>
+            <div class="text-4xl font-bold text-white mb-12">[LOGO]</div>
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
@@ -138,7 +155,7 @@
             <!-- 彈出視窗的標題和關閉按鈕 -->
             <div class="flex-shrink-0 flex justify-end items-center p-2 border-b">
                 <button id="modal-close-btn" class="p-2 text-gray-500 rounded-none hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
                 </button>
             </div>
             <!-- 用於載入內容的 iframe -->
@@ -149,7 +166,7 @@
     </div>
 
     <!-- 全螢幕建議彈出視窗 -->
-    <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50">
+    <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
             <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
             <p class="text-gray-600 mb-4">建議點擊左上角的全螢幕按鈕，以獲得最佳的互動體驗。</p>
@@ -157,9 +174,19 @@
         </div>
     </div>
 
+    <!-- Cover Page -->
+    <div id="cover-page" class="fixed inset-0 bg-[#379BB2] z-[100] cursor-pointer">
+        <!-- 將下方的 src 換成您自己的圖片網址 -->
+        <!-- 電腦版封面圖片 -->
+        <img src="https://placehold.co/1920x1080/379BB2/FFFFFF?text=電腦版封面圖" alt="桌面版封面" class="cover-desktop w-full h-full object-cover">
+        <!-- 手機版封面圖片 -->
+        <img src="https://placehold.co/1080x1920/379BB2/FFFFFF?text=手機版封面圖" alt="手機版封面" class="cover-mobile w-full h-full object-cover">
+    </div>
+
 
     <script>
         // --- DOM 元素選擇 ---
+        const header = document.getElementById('main-header');
         const openBtn = document.getElementById('menu-open-btn');
         const menuCloseBtn = document.getElementById('menu-close-btn');
         const menu = document.getElementById('fullscreen-menu');
@@ -182,12 +209,14 @@
         const fullscreenExitIcon = document.getElementById('fullscreen-exit-icon');
 
         const contentIframe = document.getElementById('content-iframe');
+        const coverPage = document.getElementById('cover-page');
         
         // --- 狀態與常數 ---
         const originalGameUrl = 'https://gamejolt.net/?token=TWrWpXCDLVrXHg2c7LUFbBrLXXkAAP';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
+        let isHeaderHidden = false; // 用於行動裝置的沉浸模式
 
-        // --- 載入內容的統一函式 (NEW) ---
+        // --- 載入內容的統一函式 ---
         function loadContent(url) {
             if (url) {
                 if (url === storiesUrl) {
@@ -199,15 +228,19 @@
             }
         }
 
-        // --- 初始載入 ---
+        // --- 初始載入與封面 ---
+        coverPage.addEventListener('click', () => {
+            coverPage.style.transform = 'translateY(-100%)';
+            setTimeout(() => {
+                coverPage.style.display = 'none';
+                suggestionModal.classList.remove('hidden');
+            }, 800);
+        });
+        
         window.addEventListener('load', () => {
-            // 檢查 URL hash 來決定初始載入內容
             if (window.location.hash === '#stories') {
                 loadContent(storiesUrl);
             }
-            // 預設就載入遊戲，不需特別處理
-            
-            suggestionModal.classList.remove('hidden');
         });
 
         // --- 背景切換函式 ---
@@ -246,13 +279,12 @@
             embedModal.querySelector('#modal-content-container').classList.add('scale-95', 'opacity-0');
             setTimeout(() => {
                 embedModal.classList.add('hidden');
-                modalIframe.src = ""; // 停止 iframe 內容播放
+                modalIframe.src = "";
             }, 300);
         }
 
         modalCloseBtn.addEventListener('click', closeModal);
         embedModal.addEventListener('click', (e) => {
-            // 點擊背景遮罩時才關閉
             if (e.target.id === 'embed-modal') {
                 closeModal();
             }
@@ -264,25 +296,21 @@
         });
 
         // --- 選單項目互動 ---
-        
-        // "回到遊戲" 按鈕的事件監聽
         backToGameBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            loadContent(originalGameUrl); // 使用統一的函式載入原始遊戲
+            loadContent(originalGameUrl);
             closeMenu();
         });
         
-        // 切換主畫面的選單項目
         menuItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = item.dataset.src;
-                loadContent(url); // 使用統一的函式載入內容
+                loadContent(url);
                 closeMenu();
             });
         });
 
-        // "製作團隊" 按鈕打開彈出視窗
         aboutUsBtn.addEventListener('click', (e) => {
             e.preventDefault();
             const url = aboutUsBtn.dataset.src;
@@ -303,29 +331,37 @@
             }
         });
 
-        // --- 全螢幕控制 ---
+        // --- 智慧全螢幕/沉浸模式控制 ---
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
+
         function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen();
+            if (isIOS()) {
+                // iOS 沉浸模式：隱藏/顯示導覽列
+                isHeaderHidden = !isHeaderHidden;
+                header.classList.toggle('transform', isHeaderHidden);
+                header.classList.toggle('-translate-y-full', isHeaderHidden);
+                updateFullscreenIcon(isHeaderHidden);
             } else {
-                if (document.exitFullscreen) {
+                // 標準全螢幕 API
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen();
+                } else if (document.exitFullscreen) {
                     document.exitFullscreen();
                 }
             }
         }
 
-        function updateFullscreenIcon() {
-            if (document.fullscreenElement) {
-                fullscreenEnterIcon.classList.add('hidden');
-                fullscreenExitIcon.classList.remove('hidden');
-            } else {
-                fullscreenEnterIcon.classList.remove('hidden');
-                fullscreenExitIcon.classList.add('hidden');
-            }
+        function updateFullscreenIcon(isImmersive) {
+             const isFullScreen = document.fullscreenElement != null || isImmersive;
+             fullscreenEnterIcon.classList.toggle('hidden', isFullScreen);
+             fullscreenExitIcon.classList.toggle('hidden', !isFullScreen);
         }
 
         fullscreenBtn.addEventListener('click', toggleFullScreen);
-        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        // 標準API的事件監聽
+        document.addEventListener('fullscreenchange', () => updateFullscreenIcon(false));
 
     </script>
 </body>
