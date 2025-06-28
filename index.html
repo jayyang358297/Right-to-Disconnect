@@ -40,19 +40,19 @@
             pointer-events: none;
         }
         
-        /* 調整主要嵌入框架的尺寸為 393x852 */
-        @media (min-width: 750px) {
+        /* 主要嵌入框架的尺寸現在由JS動態控制，此處為預設/回退值 */
+        .embed-container {
+            width: 100%;
+            max-width: 347px;
+            aspect-ratio: 347 / 750;
+        }
+
+        @media (min-width: 768px) {
             .embed-container {
                  width: 347px;
                  height: 750px;
                  max-height: 90vh;
             }
-        }
-        
-        .embed-container {
-            aspect-ratio: 347 / 750;
-            width: 100%;
-            max-width: 347px;
         }
 
         /* 確保彈出視窗顯示在最上層 */
@@ -60,7 +60,7 @@
             z-index: 50;
         }
         
-        /* 彈出視窗內容框的樣式 */
+        /* 彈出視窗內容框的樣式 (維持不變) */
         #modal-content-container {
             width: 393px;
             height: 700px;
@@ -140,8 +140,8 @@
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://obvious-fancy-565920.framer.app/">認識離線權</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/">教育現場的故事</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://obvious-fancy-565920.framer.app/" data-width="393" data-height="852">認識離線權</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/" data-width="393" data-height="852">教育現場的故事</a></li>
                     <li><a href="https://unews.nccu.edu.tw/unews/disconnect/" target="_blank" rel="noopener noreferrer" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">報導全文</a></li>
                     <li><a href="#" id="about-us-btn" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://convex-level-045910.framer.app/">製作團隊</a></li>
                 </ul>
@@ -179,7 +179,7 @@
     <!-- Cover Page -->
     <div id="cover-page" class="fixed inset-0 bg-[#379BB2] z-[100] cursor-pointer">
         <!-- 電腦版封面圖片 -->
-        <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%E9%9B%BB%E8%85%A6.png?raw=true" alt="桌面版封面" class="cover-desktop w-full h-full object-cover">
+        <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%E9%9B%BB%E8%85%A6%20(1).png?raw=true" alt="桌面版封面" class="cover-desktop w-full h-full object-cover">
         <!-- 手機版封面圖片 -->
         <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E6%89%8B%E6%A9%9F%E5%B0%81%E9%9D%A2%E5%A3%93%E7%B8%AE%E7%89%88.png?raw=true" alt="手機版封面" class="cover-mobile w-full h-full object-cover">
     </div>
@@ -212,6 +212,7 @@
 
         const contentIframe = document.getElementById('content-iframe');
         const coverPage = document.getElementById('cover-page');
+        const embedContainer = document.querySelector('.embed-container');
         
         // --- 狀態與常數 ---
         const originalGameUrl = 'https://traditional-calls-008686.framer.app/';
@@ -222,9 +223,21 @@
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
 
+        function setEmbedSize(width, height) {
+            if(embedContainer && width && height) {
+                const w = parseInt(width, 10);
+                const h = parseInt(height, 10);
+                embedContainer.style.width = `${w}px`;
+                embedContainer.style.height = `${h}px`;
+                embedContainer.style.maxWidth = `${w}px`;
+                embedContainer.style.aspectRatio = `${w} / ${h}`;
+            }
+        }
+
         // --- 載入內容的統一函式 ---
-        function loadContent(url) {
+        function loadContent(url, width, height) {
             if (url) {
+                setEmbedSize(width, height);
                 if (url === storiesUrl) {
                     setBlackBackground();
                 } else {
@@ -244,8 +257,10 @@
         });
         
         window.addEventListener('load', () => {
+            // 預設為遊戲尺寸
+            setEmbedSize(347, 750); 
             if (window.location.hash === '#stories') {
-                loadContent(storiesUrl);
+                loadContent(storiesUrl, 393, 852);
             }
             if(isIOS()){
                 safariSuggestion.classList.remove('hidden');
@@ -307,7 +322,7 @@
         // --- 選單項目互動 ---
         backToGameBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            loadContent(originalGameUrl);
+            loadContent(originalGameUrl, 347, 750);
             closeMenu();
         });
         
@@ -315,7 +330,9 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = item.dataset.src;
-                loadContent(url);
+                const width = item.dataset.width;
+                const height = item.dataset.height;
+                loadContent(url, width, height);
                 closeMenu();
             });
         });
@@ -342,10 +359,8 @@
 
         // --- 標準全螢幕控制 ---
         function toggleFullScreen() {
-            // 這個功能在 iOS 上不會有作用，但在其他裝置上可以正常運作
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    // 在此處可以處理進入全螢幕失敗的情況，例如在 iOS 上
                     console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
                 });
             } else {
