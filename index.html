@@ -42,7 +42,12 @@
         
         /* 嵌入框的通用樣式 */
         .embed-container {
-            transition: width 0.3s ease, height 0.3s ease;
+            transition: width 0.3s ease, height 0.3s ease, box-shadow 0.5s ease-in-out;
+        }
+
+        /* 光暈效果 */
+        .embed-container.glow-effect {
+            box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6);
         }
 
         /* 確保彈出視窗顯示在最上層 */
@@ -126,7 +131,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
-            <div class="text-4xl font-bold text-white mb-12">教師離線權</div>
+            <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94.png?raw=true" alt="網站Logo" class="h-16 w-auto mb-12 mx-auto">
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
@@ -228,7 +233,8 @@
             if(embedContainer) {
                 embedContainer.style.width = `${width}px`;
                 embedContainer.style.height = `${height}px`;
-                embedContainer.style.maxWidth = `100%`;
+                embedContainer.style.maxWidth = '100%';
+                embedContainer.style.maxHeight = '90vh';
                 embedContainer.style.aspectRatio = `${width} / ${height}`;
             }
         }
@@ -237,11 +243,15 @@
         function loadContent(url, sizePreset) {
             if (url) {
                 setEmbedSize(sizePreset || 'game');
+                
                 if (url === storiesUrl) {
                     setBlackBackground();
+                    embedContainer.classList.add('glow-effect');
                 } else {
                     setOriginalBackground();
+                    embedContainer.classList.remove('glow-effect');
                 }
+
                 contentIframe.src = url;
             }
         }
@@ -259,7 +269,6 @@
             if (window.location.hash === '#stories') {
                 loadContent(storiesUrl, 'large');
             } else {
-                // 初始載入時設定遊戲尺寸
                 setEmbedSize('game');
             }
             if(isIOS()){
@@ -330,7 +339,7 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = item.dataset.src;
-                const size = item.dataset.size || 'game'; // 如果沒有指定size，就預設為遊戲尺寸
+                const size = item.dataset.size || 'game';
                 loadContent(url, size);
                 closeMenu();
             });
