@@ -93,6 +93,38 @@
             .cover-desktop { display: block; } /* 顯示電腦版 */
         }
 
+        /* 選單項目浮現動畫 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 選單項目初始狀態 */
+        #fullscreen-menu .menu-logo,
+        #fullscreen-menu nav li {
+            opacity: 0;
+        }
+
+        /* 選單可見時，觸發動畫 */
+        #fullscreen-menu.is-visible .menu-logo,
+        #fullscreen-menu.is-visible nav li {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        /* 動畫延遲，創造依序出現的效果 */
+        #fullscreen-menu.is-visible .menu-logo { animation-delay: 0.1s; }
+        #fullscreen-menu.is-visible nav li:nth-child(1) { animation-delay: 0.2s; }
+        #fullscreen-menu.is-visible nav li:nth-child(2) { animation-delay: 0.3s; }
+        #fullscreen-menu.is-visible nav li:nth-child(3) { animation-delay: 0.4s; }
+        #fullscreen-menu.is-visible nav li:nth-child(4) { animation-delay: 0.5s; }
+        #fullscreen-menu.is-visible nav li:nth-child(5) { animation-delay: 0.6s; }
+
     </style>
 </head>
 <body class="relative">
@@ -143,7 +175,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
-            <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%20(1).png?raw=true" alt="網站Logo" class="h-16 w-auto mb-12 mx-auto">
+            <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%20(1).png?raw=true" alt="網站Logo" class="menu-logo h-16 w-auto mb-12 mx-auto">
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
@@ -304,9 +336,11 @@
         // --- 全螢幕選單控制 ---
         function openMenu() {
             menu.classList.remove('opacity-0', 'pointer-events-none');
+            menu.classList.add('is-visible');
         }
         function closeMenu() {
             menu.classList.add('opacity-0', 'pointer-events-none');
+            menu.classList.remove('is-visible');
         }
         openBtn.addEventListener('click', openMenu);
         menuCloseBtn.addEventListener('click', closeMenu);
