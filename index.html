@@ -45,9 +45,21 @@
             transition: width 0.3s ease, height 0.3s ease, box-shadow 0.5s ease-in-out;
         }
 
-        /* 光暈效果 */
+        /* 光暈呼吸動畫 */
+        @keyframes breathe-glow {
+            0% {
+                box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 35px 12px rgba(55, 155, 178, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6);
+            }
+        }
+
         .embed-container.glow-effect {
-            box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6);
+            animation: breathe-glow 3s infinite ease-in-out;
         }
 
         /* 確保彈出視窗顯示在最上層 */
