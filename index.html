@@ -98,7 +98,7 @@
     <div class="deco-shape" style="width: 80px; height: 80px; top: 50%; left: 20%;"></div>
 
     <!-- 頂部圖標 -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white transition-transform duration-300 ease-in-out">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white">
         <div class="flex justify-between items-center">
             <!-- 左側圖標 -->
             <div class="flex items-center space-x-4">
@@ -168,9 +168,9 @@
     <!-- 全螢幕建議彈出視窗 -->
     <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
-            <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗</h3>
+            <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
             <p class="text-gray-600 mb-4">建議點擊左上角的全螢幕按鈕，以獲得最佳的互動體驗。<br>
-                <span id="safari-suggestion" class="text-sm text-gray-500 hidden">在 Safari 上，點擊「大小」按鈕來「隱藏工具列」</span>
+                <span id="safari-suggestion" class="text-sm text-gray-500 hidden">在 Safari 上，點擊「大小」按鈕來「隱藏工具列」。</span>
             </p>
             <button id="suggestion-close-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-none w-full border-2 border-black">我知道了</button>
         </div>
@@ -216,7 +216,6 @@
         // --- 狀態與常數 ---
         const originalGameUrl = 'https://traditional-calls-008686.framer.app/';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
-        let isHeaderHidden = false; // 用於行動裝置的沉浸模式
 
         // --- 實用函式 ---
         function isIOS() {
@@ -341,33 +340,29 @@
             }
         });
 
-        // --- 智慧全螢幕/沉浸模式控制 ---
+        // --- 標準全螢幕控制 ---
         function toggleFullScreen() {
-            if (isIOS()) {
-                // iOS 沉浸模式：隱藏/顯示導覽列
-                isHeaderHidden = !isHeaderHidden;
-                header.classList.toggle('transform', isHeaderHidden);
-                header.classList.toggle('-translate-y-full', isHeaderHidden);
-                updateFullscreenIcon(isHeaderHidden);
+            // 這個功能在 iOS 上不會有作用，但在其他裝置上可以正常運作
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    // 在此處可以處理進入全螢幕失敗的情況，例如在 iOS 上
+                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                });
             } else {
-                // 標準全螢幕 API
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen();
-                } else if (document.exitFullscreen) {
+                if (document.exitFullscreen) {
                     document.exitFullscreen();
                 }
             }
         }
 
-        function updateFullscreenIcon(isImmersive) {
-             const isFullScreen = document.fullscreenElement != null || isImmersive;
+        function updateFullscreenIcon() {
+             const isFullScreen = document.fullscreenElement != null;
              fullscreenEnterIcon.classList.toggle('hidden', isFullScreen);
              fullscreenExitIcon.classList.toggle('hidden', !isFullScreen);
         }
 
         fullscreenBtn.addEventListener('click', toggleFullScreen);
-        // 標準API的事件監聽
-        document.addEventListener('fullscreenchange', () => updateFullscreenIcon(false));
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
 
     </script>
 </body>
