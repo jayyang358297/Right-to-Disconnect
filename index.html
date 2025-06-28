@@ -40,19 +40,9 @@
             pointer-events: none;
         }
         
-        /* 主要嵌入框架的尺寸現在由JS動態控制，此處為預設/回退值 */
+        /* 嵌入框的通用樣式 */
         .embed-container {
-            width: 100%;
-            max-width: 347px;
-            aspect-ratio: 347 / 750;
-        }
-
-        @media (min-width: 768px) {
-            .embed-container {
-                 width: 347px;
-                 height: 750px;
-                 max-height: 90vh;
-            }
+            transition: width 0.3s ease, height 0.3s ease;
         }
 
         /* 確保彈出視窗顯示在最上層 */
@@ -140,8 +130,8 @@
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://obvious-fancy-565920.framer.app/" data-width="393" data-height="852">認識離線權</a></li>
-                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/" data-width="393" data-height="852">教育現場的故事</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://obvious-fancy-565920.framer.app/" data-size="large">認識離線權</a></li>
+                    <li><a href="#" class="menu-item text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://exquisite-notes-282501.framer.app/" data-size="large">教育現場的故事</a></li>
                     <li><a href="https://unews.nccu.edu.tw/unews/disconnect/" target="_blank" rel="noopener noreferrer" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">報導全文</a></li>
                     <li><a href="#" id="about-us-btn" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors" data-src="https://convex-level-045910.framer.app/">製作團隊</a></li>
                 </ul>
@@ -217,27 +207,36 @@
         // --- 狀態與常數 ---
         const originalGameUrl = 'https://traditional-calls-008686.framer.app/';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
+        const isMobile = window.innerWidth < 768;
 
         // --- 實用函式 ---
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
 
-        function setEmbedSize(width, height) {
-            if(embedContainer && width && height) {
-                const w = parseInt(width, 10);
-                const h = parseInt(height, 10);
-                embedContainer.style.width = `${w}px`;
-                embedContainer.style.height = `${h}px`;
-                embedContainer.style.maxWidth = `${w}px`;
-                embedContainer.style.aspectRatio = `${w} / ${h}`;
+        function setEmbedSize(sizePreset) {
+            let width, height;
+            
+            if (sizePreset === 'game') {
+                width = isMobile ? 347 : 393;
+                height = isMobile ? 750 : 852;
+            } else { // 'large'
+                width = 393;
+                height = 852;
+            }
+
+            if(embedContainer) {
+                embedContainer.style.width = `${width}px`;
+                embedContainer.style.height = `${height}px`;
+                embedContainer.style.maxWidth = `100%`;
+                embedContainer.style.aspectRatio = `${width} / ${height}`;
             }
         }
 
         // --- 載入內容的統一函式 ---
-        function loadContent(url, width, height) {
+        function loadContent(url, sizePreset) {
             if (url) {
-                setEmbedSize(width, height);
+                setEmbedSize(sizePreset || 'game');
                 if (url === storiesUrl) {
                     setBlackBackground();
                 } else {
@@ -257,10 +256,11 @@
         });
         
         window.addEventListener('load', () => {
-            // 預設為遊戲尺寸
-            setEmbedSize(347, 750); 
             if (window.location.hash === '#stories') {
-                loadContent(storiesUrl, 393, 852);
+                loadContent(storiesUrl, 'large');
+            } else {
+                // 初始載入時設定遊戲尺寸
+                setEmbedSize('game');
             }
             if(isIOS()){
                 safariSuggestion.classList.remove('hidden');
@@ -322,7 +322,7 @@
         // --- 選單項目互動 ---
         backToGameBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            loadContent(originalGameUrl, 347, 750);
+            loadContent(originalGameUrl, 'game');
             closeMenu();
         });
         
@@ -330,9 +330,8 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = item.dataset.src;
-                const width = item.dataset.width;
-                const height = item.dataset.height;
-                loadContent(url, width, height);
+                const size = item.dataset.size || 'game'; // 如果沒有指定size，就預設為遊戲尺寸
+                loadContent(url, size);
                 closeMenu();
             });
         });
