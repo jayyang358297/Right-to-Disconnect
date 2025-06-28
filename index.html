@@ -136,7 +136,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
-            <div class="text-4xl font-bold text-white mb-12">[LOGO]</div>
+            <div class="text-4xl font-bold text-white mb-12">教師離線權</div>
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
@@ -169,7 +169,9 @@
     <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
             <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
-            <p class="text-gray-600 mb-4">建議點擊左上角的全螢幕按鈕，以獲得最佳的互動體驗。</p>
+            <p class="text-gray-600 mb-4">建議點擊左上角的全螢幕按鈕，以獲得最佳的互動體驗。<br>
+                <span id="safari-suggestion" class="text-sm text-gray-500 hidden">在 Safari 上，點擊「大小」按鈕來「隱藏工具列」。</span>
+            </p>
             <button id="suggestion-close-btn" class="bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-none w-full border-2 border-black">我知道了</button>
         </div>
     </div>
@@ -200,6 +202,7 @@
 
         const suggestionModal = document.getElementById('fullscreen-suggestion-modal');
         const suggestionCloseBtn = document.getElementById('suggestion-close-btn');
+        const safariSuggestion = document.getElementById('safari-suggestion');
 
         const decoShapes = document.querySelectorAll('.deco-shape');
 
@@ -214,6 +217,11 @@
         const originalGameUrl = 'https://itch.io/embed-upload/14130756?color=333333';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
         let isHeaderHidden = false; // 用於行動裝置的沉浸模式
+
+        // --- 實用函式 ---
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        }
 
         // --- 載入內容的統一函式 ---
         function loadContent(url) {
@@ -239,6 +247,9 @@
         window.addEventListener('load', () => {
             if (window.location.hash === '#stories') {
                 loadContent(storiesUrl);
+            }
+            if(isIOS()){
+                safariSuggestion.classList.remove('hidden');
             }
         });
 
@@ -331,10 +342,6 @@
         });
 
         // --- 智慧全螢幕/沉浸模式控制 ---
-        function isIOS() {
-            return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        }
-
         function toggleFullScreen() {
             if (isIOS()) {
                 // iOS 沉浸模式：隱藏/顯示導覽列
