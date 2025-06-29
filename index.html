@@ -40,9 +40,10 @@
             pointer-events: none;
         }
         
-        /* 嵌入框的通用樣式 - 尺寸完全由JS控制 */
+        /* 嵌入框的通用樣式 - 尺寸由JS動態控制，但加入基本設定 */
         .embed-container {
-            transition: width 0.3s ease, height 0.3s ease, box-shadow 0.5s ease-in-out;
+            transition: width 0.3s ease, height 0.3s ease, box-shadow 0.5s ease-in-out, max-width 0.3s ease;
+            width: 100%; /* 基本寬度為100%，由JS設定最大寬度 */
         }
 
         /* 光暈呼吸動畫 */
@@ -153,11 +154,11 @@
                 <button id="fullscreen-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
                     <!-- 標準進入全螢幕圖標 -->
                     <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                     </svg>
                     <!-- 標準退出全螢幕圖標 -->
                     <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 hidden">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
                     </svg>
                 </button>
             </div>
@@ -272,23 +273,35 @@
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
 
+        // --- 尺寸設定函式 (已修改) ---
         function setEmbedSize(sizePreset) {
-            let width, height;
-            
+            let maxWidth, aspectRatioW, aspectRatioH;
+
             if (sizePreset === 'game') {
-                width = isMobile ? 347 : 393;
-                height = isMobile ? 750 : 852;
+                maxWidth = isMobile ? 347 : 393;
+                aspectRatioW = isMobile ? 347 : 393;
+                aspectRatioH = isMobile ? 750 : 852;
             } else { // 'large'
-                width = 393;
-                height = 852;
+                maxWidth = 393;
+                aspectRatioW = 393;
+                aspectRatioH = 852;
             }
 
             if(embedContainer) {
-                embedContainer.style.width = `${width}px`;
-                embedContainer.style.height = `${height}px`;
-                embedContainer.style.maxWidth = '100%';
+                // 設定容器的最大寬度，這會限制它在電腦螢幕上的大小
+                embedContainer.style.maxWidth = `${maxWidth}px`;
+                
+                // 設定長寬比，瀏覽器會根據目前的寬度自動計算高度
+                embedContainer.style.aspectRatio = `${aspectRatioW} / ${aspectRatioH}`;
+                
+                // 移除固定的高度設定，讓長寬比來決定高度
+                embedContainer.style.height = ''; 
+                
+                // 設定最大高度，確保在任何螢幕上都不會超出可視高度的90%
                 embedContainer.style.maxHeight = '90vh';
-                embedContainer.style.aspectRatio = `${width} / ${height}`;
+                
+                // 讓容器寬度填滿父元素，但不會超過上面設定的 maxWidth
+                embedContainer.style.width = '100%';
             }
         }
 
@@ -328,6 +341,17 @@
                 safariSuggestion.classList.remove('hidden');
             }
         });
+
+        // 監聽視窗大小變化，重新計算尺寸
+        window.addEventListener('resize', () => {
+             // 判斷當前是哪個頁面，並使用對應的尺寸預設來重新計算
+             if (contentIframe.src.includes('exquisite-notes')) {
+                setEmbedSize('large');
+             } else {
+                setEmbedSize('game');
+             }
+        });
+
 
         // --- 背景切換函式 ---
         function setOriginalBackground() {
