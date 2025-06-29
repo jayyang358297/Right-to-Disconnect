@@ -40,7 +40,7 @@
             pointer-events: none;
         }
         
-        /* 嵌入框的通用樣式 */
+        /* 嵌入框的通用樣式 - 尺寸完全由JS控制 */
         .embed-container {
             transition: width 0.3s ease, height 0.3s ease, box-shadow 0.5s ease-in-out;
         }
@@ -256,19 +256,37 @@
         // --- 狀態與常數 ---
         const originalGameUrl = 'https://traditional-calls-008686.framer.app/';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
+        const isMobile = window.innerWidth < 768;
 
         // --- 實用函式 ---
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
 
+        function setEmbedSize(sizePreset) {
+            let width, height;
+            
+            if (sizePreset === 'game') {
+                width = isMobile ? 347 : 393;
+                height = isMobile ? 750 : 852;
+            } else { // 'large'
+                width = 393;
+                height = 852;
+            }
+
+            if(embedContainer) {
+                embedContainer.style.width = `${width}px`;
+                embedContainer.style.height = `${height}px`;
+                embedContainer.style.maxWidth = '100%';
+                embedContainer.style.maxHeight = '90vh';
+                embedContainer.style.aspectRatio = `${width} / ${height}`;
+            }
+        }
+
         // --- 載入內容的統一函式 ---
-        function loadContent(url) {
+        function loadContent(url, sizePreset) {
             if (url) {
-                // 恢復為預設尺寸
-                embedContainer.style.width = '393px';
-                embedContainer.style.height = '852px';
-                embedContainer.style.aspectRatio = '393 / 852';
+                setEmbedSize(sizePreset || 'game');
                 
                 if (url === storiesUrl) {
                     setBlackBackground();
@@ -293,7 +311,9 @@
         
         window.addEventListener('load', () => {
             if (window.location.hash === '#stories') {
-                loadContent(storiesUrl);
+                loadContent(storiesUrl, 'large');
+            } else {
+                setEmbedSize('game');
             }
             if(isIOS()){
                 safariSuggestion.classList.remove('hidden');
@@ -357,7 +377,7 @@
         // --- 選單項目互動 ---
         backToGameBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            loadContent(originalGameUrl);
+            loadContent(originalGameUrl, 'game');
             closeMenu();
         });
         
@@ -365,7 +385,8 @@
             item.addEventListener('click', (e) => {
                 e.preventDefault();
                 const url = item.dataset.src;
-                loadContent(url);
+                const size = item.dataset.size || 'game';
+                loadContent(url, size);
                 closeMenu();
             });
         });
