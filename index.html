@@ -22,14 +22,17 @@
         }
         
         body {
-            /* 更新為指定的像素字體 */
             font-family: 'DotGothic16', sans-serif;
             background-color: #379BB2;
             background-image: none;
-            transition: background 0.5s ease; /* 保留背景切換動畫 */
+            transition: background 0.5s ease;
         }
 
-        /* 為了模擬圖片中的背景斑點，我們創建一些裝飾性元素 */
+        /* [修改] 主內容區的高度由 JS 控制，以解決行動裝置 vh 單位的問題 */
+        #main-content {
+            height: var(--app-height, 100vh);
+        }
+
         .deco-shape {
             position: absolute;
             border-radius: 50%;
@@ -40,35 +43,25 @@
             pointer-events: none;
         }
         
-        /* 嵌入框的通用樣式 - 尺寸由JS動態控制，但加入基本設定 */
         .embed-container {
             transition: width 0.3s ease, height 0.3s ease, box-shadow 0.5s ease-in-out, max-width 0.3s ease;
-            width: 100%; /* 基本寬度為100%，由JS設定最大寬度 */
+            width: 100%; 
         }
 
-        /* 光暈呼吸動畫 */
         @keyframes breathe-glow {
-            0% {
-                box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6);
-            }
-            50% {
-                box-shadow: 0 0 35px 12px rgba(55, 155, 178, 0.8);
-            }
-            100% {
-                box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6);
-            }
+            0% { box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6); }
+            50% { box-shadow: 0 0 35px 12px rgba(55, 155, 178, 0.8); }
+            100% { box-shadow: 0 0 25px 8px rgba(55, 155, 178, 0.6); }
         }
 
         .embed-container.glow-effect {
             animation: breathe-glow 3s infinite ease-in-out;
         }
 
-        /* 確保彈出視窗顯示在最上層 */
         #embed-modal, #fullscreen-suggestion-modal, #cover-page {
             z-index: 50;
         }
         
-        /* 彈出視窗內容框的樣式 (維持不變) */
         #modal-content-container {
             width: 393px;
             height: 700px;
@@ -76,7 +69,6 @@
             max-height: 95vh;
         }
         
-        /* 讓像素圖標更清晰 */
         .pixelated {
             image-rendering: pixelated;
         }
@@ -85,40 +77,29 @@
             transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
         }
 
-        /* 響應式封面圖的判斷邏輯 */
-        .cover-mobile { display: block; } /* 手機版預設顯示 */
-        .cover-desktop { display: none; }  /* 電腦版預設隱藏 */
+        .cover-mobile { display: block; }
+        .cover-desktop { display: none; }
 
-        @media (min-width: 768px) { /* 當螢幕寬度大於 768px (平板/電腦) */
-            .cover-mobile { display: none; }  /* 隱藏手機版 */
-            .cover-desktop { display: block; } /* 顯示電腦版 */
+        @media (min-width: 768px) {
+            .cover-mobile { display: none; }
+            .cover-desktop { display: block; }
         }
 
-        /* 選單項目浮現動畫 */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(15px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 選單項目初始狀態 */
         #fullscreen-menu .menu-logo,
         #fullscreen-menu nav li {
             opacity: 0;
         }
 
-        /* 選單可見時，觸發動畫 */
         #fullscreen-menu.is-visible .menu-logo,
         #fullscreen-menu.is-visible nav li {
             animation: fadeInUp 0.5s ease-out forwards;
         }
         
-        /* 動畫延遲，創造依序出現的效果 */
         #fullscreen-menu.is-visible .menu-logo { animation-delay: 0.1s; }
         #fullscreen-menu.is-visible nav li:nth-child(1) { animation-delay: 0.2s; }
         #fullscreen-menu.is-visible nav li:nth-child(2) { animation-delay: 0.3s; }
@@ -126,15 +107,13 @@
         #fullscreen-menu.is-visible nav li:nth-child(4) { animation-delay: 0.5s; }
         #fullscreen-menu.is-visible nav li:nth-child(5) { animation-delay: 0.6s; }
 
-        /* 全螢幕選單背景圖 */
         #fullscreen-menu {
             background-image: url('https://github.com/jayyang358297/Right-to-Disconnect/blob/main/menu.png?raw=true');
-            background-color: rgba(55, 155, 178, 0.8); /* 半透明顏色疊加層 */
-            background-blend-mode: overlay; /* 混合模式 */
+            background-color: rgba(55, 155, 178, 0.8);
+            background-blend-mode: overlay;
             background-size: cover;
             background-position: center;
         }
-
     </style>
 </head>
 <body class="relative">
@@ -149,30 +128,24 @@
     <!-- 頂部圖標 -->
     <header id="main-header" class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white">
         <div class="flex justify-between items-center">
-            <!-- 左側圖標 -->
             <div class="flex items-center space-x-4">
                 <button id="fullscreen-btn" class="p-2 rounded-full hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
-                    <!-- 標準進入全螢幕圖標 -->
                     <svg id="fullscreen-enter-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                     </svg>
-                    <!-- 標準退出全螢幕圖標 -->
                     <svg id="fullscreen-exit-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-6 w-6 hidden">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9 3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9V4.5M15 9h4.5M15 9l5.25-5.25M15 15v4.5M15 15h4.5M15 15l5.25 5.25" />
                     </svg>
                 </button>
             </div>
-
-            <!-- 右側選單按鈕 -->
             <button id="menu-open-btn" class="p-2 rounded-none hover:bg-white/30 focus:outline-none focus:ring-2 focus:ring-white">
-                <!-- 像素風漢堡選單圖標 -->
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 pixelated"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
             </button>
         </div>
     </header>
 
-    <!-- 主內容區域 -->
-    <main id="main-content" class="w-full h-screen flex items-center justify-center p-4">
+    <!-- 主內容區域: [修改] 移除了 h-screen class，改由 style 中的 CSS 變數控制 -->
+    <main id="main-content" class="w-full flex items-center justify-center p-4">
         <div class="embed-container bg-white rounded-none shadow-2xl overflow-hidden ring-2 ring-white/30">
             <iframe id="content-iframe" src="https://traditional-calls-008686.framer.app/" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
@@ -181,7 +154,6 @@
     <!-- 全螢幕選單 -->
     <div id="fullscreen-menu" class="fixed inset-0 z-40 backdrop-blur-sm p-4 text-white opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out">
         <button id="menu-close-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white p-2 rounded-none hover:bg-white/20">
-            <!-- 像素風關閉圖標 -->
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
@@ -198,23 +170,21 @@
         </div>
     </div>
     
-    <!-- 用於嵌入內容的彈出視窗 (Modal) -->
+    <!-- 彈出視窗 (Modal) -->
     <div id="embed-modal" class="fixed inset-0 bg-black/60 p-4 py-8 flex justify-center items-start overflow-y-auto hidden z-50">
         <div id="modal-content-container" class="bg-white rounded-none shadow-lg flex flex-col scale-95 opacity-0 transition-all duration-300 ring-4 ring-white/50 mt-8 mb-8">
-            <!-- 彈出視窗的標題和關閉按鈕 -->
             <div class="flex-shrink-0 flex justify-end items-center p-2 border-b">
                 <button id="modal-close-btn" class="p-2 text-gray-500 rounded-none hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-6 w-6 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
                 </button>
             </div>
-            <!-- 用於載入內容的 iframe -->
             <div class="flex-grow p-1">
                  <iframe id="modal-iframe" src="" class="w-full h-full border-0" title="彈出視窗嵌入內容" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <!-- 全螢幕建議彈出視窗 -->
+    <!-- 全螢幕建議 -->
     <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
             <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
@@ -225,14 +195,11 @@
         </div>
     </div>
 
-    <!-- Cover Page -->
+    <!-- 封面 -->
     <div id="cover-page" class="fixed inset-0 bg-[#379BB2] z-[100] cursor-pointer">
-        <!-- 電腦版封面圖片 -->
         <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/35_11zon.png?raw=true" alt="桌面版封面" class="cover-desktop w-full h-full object-cover">
-        <!-- 手機版封面圖片 -->
         <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/34_11zon.png?raw=true" alt="手機版封面" class="cover-mobile w-full h-full object-cover">
     </div>
-
 
     <script>
         // --- DOM 元素選擇 ---
@@ -266,16 +233,24 @@
         // --- 狀態與常數 ---
         const originalGameUrl = 'https://traditional-calls-008686.framer.app/';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
-        const isMobile = window.innerWidth < 768;
+        let currentSizePreset = 'game'; // [新增] 用來追蹤目前的尺寸模式
 
         // --- 實用函式 ---
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
 
-        // --- 尺寸設定函式 (已修改) ---
+        // --- [新增] 動態設定應用程式高度的函式 ---
+        function setAppHeight() {
+            const doc = document.documentElement;
+            // window.innerHeight 可以取得瀏覽器視窗的內部高度，這在行動裝置上比 100vh 更準確
+            doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+        }
+
         function setEmbedSize(sizePreset) {
+            currentSizePreset = sizePreset; // 更新目前的尺寸模式
             let maxWidth, aspectRatioW, aspectRatioH;
+            const isMobile = window.innerWidth < 768;
 
             if (sizePreset === 'game') {
                 maxWidth = isMobile ? 347 : 393;
@@ -288,24 +263,15 @@
             }
 
             if(embedContainer) {
-                // 設定容器的最大寬度，這會限制它在電腦螢幕上的大小
                 embedContainer.style.maxWidth = `${maxWidth}px`;
-                
-                // 設定長寬比，瀏覽器會根據目前的寬度自動計算高度
                 embedContainer.style.aspectRatio = `${aspectRatioW} / ${aspectRatioH}`;
-                
-                // 移除固定的高度設定，讓長寬比來決定高度
                 embedContainer.style.height = ''; 
-                
-                // 設定最大高度，確保在任何螢幕上都不會超出可視高度的90%
-                embedContainer.style.maxHeight = '90vh';
-                
-                // 讓容器寬度填滿父元素，但不會超過上面設定的 maxWidth
+                // [修改] 將 maxHeight 稍微調小一點，為底部 UI 留出更多安全空間
+                embedContainer.style.maxHeight = '95vh'; 
                 embedContainer.style.width = '100%';
             }
         }
 
-        // --- 載入內容的統一函式 ---
         function loadContent(url, sizePreset) {
             if (url) {
                 setEmbedSize(sizePreset || 'game');
@@ -322,7 +288,7 @@
             }
         }
 
-        // --- 初始載入與封面 ---
+        // --- 初始載入與事件監聽 ---
         coverPage.addEventListener('click', () => {
             coverPage.style.transform = 'translateY(-100%)';
             setTimeout(() => {
@@ -332,6 +298,7 @@
         });
         
         window.addEventListener('load', () => {
+            setAppHeight(); // 頁面載入時，先設定一次正確的高度
             if (window.location.hash === '#stories') {
                 loadContent(storiesUrl, 'large');
             } else {
@@ -342,14 +309,10 @@
             }
         });
 
-        // 監聽視窗大小變化，重新計算尺寸
+        // [修改] 監聽視窗大小變化
         window.addEventListener('resize', () => {
-             // 判斷當前是哪個頁面，並使用對應的尺寸預設來重新計算
-             if (contentIframe.src.includes('exquisite-notes')) {
-                setEmbedSize('large');
-             } else {
-                setEmbedSize('game');
-             }
+             setAppHeight(); // 視窗變化時，重新設定高度
+             setEmbedSize(currentSizePreset); // 用當前的模式重新計算 iframe 尺寸
         });
 
 
@@ -366,7 +329,7 @@
             decoShapes.forEach(shape => shape.style.opacity = '0');
         }
 
-        // --- 全螢幕選單控制 ---
+        // --- 選單與 Modal 控制 (維持不變) ---
         function openMenu() {
             menu.classList.remove('opacity-0', 'pointer-events-none');
             menu.classList.add('is-visible');
@@ -378,7 +341,6 @@
         openBtn.addEventListener('click', openMenu);
         menuCloseBtn.addEventListener('click', closeMenu);
 
-        // --- 彈出視窗 (Modal) 控制 ---
         function openModal(url) {
             modalIframe.src = url;
             embedModal.classList.remove('hidden');
@@ -397,17 +359,13 @@
 
         modalCloseBtn.addEventListener('click', closeModal);
         embedModal.addEventListener('click', (e) => {
-            if (e.target.id === 'embed-modal') {
-                closeModal();
-            }
+            if (e.target.id === 'embed-modal') closeModal();
         });
 
-        // 全螢幕建議視窗關閉
         suggestionCloseBtn.addEventListener('click', () => {
              suggestionModal.classList.add('hidden');
         });
 
-        // --- 選單項目互動 ---
         backToGameBtn.addEventListener('click', (e) => {
             e.preventDefault();
             loadContent(originalGameUrl, 'game');
@@ -433,27 +391,20 @@
             }
         });
 
-        // --- 全域按鍵控制 ---
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
-                if (!embedModal.classList.contains('hidden')) {
-                    closeModal();
-                } else if (!menu.classList.contains('opacity-0')) {
-                    closeMenu();
-                }
+                if (!embedModal.classList.contains('hidden')) closeModal();
+                else if (!menu.classList.contains('opacity-0')) closeMenu();
             }
         });
 
-        // --- 標準全螢幕控制 ---
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                    console.log(`Error: ${err.message}`);
                 });
             } else {
-                if (document.exitFullscreen) {
-                    document.exitFullscreen();
-                }
+                if (document.exitFullscreen) document.exitFullscreen();
             }
         }
 
