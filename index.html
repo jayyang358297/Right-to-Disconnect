@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>教師離線權 ｜大學報</title>
-    <!-- 新增網頁圖標 (Favicon) -->
+    <!-- Add Favicon -->
     <link rel="icon" href="data:image/svg+xml,%3csvg%20width=%2232%22%20height=%2232%22%20viewBox=%220%200%2032%2032%22%20xmlns=%22http://www.w3.org/2000/svg%22%3e%3crect%20x=%225%22%20y=%225%22%20width=%2222%22%20height=%2222%22%20fill=%22%23fff%22/%3e%3crect%20x=%227%22%20y=%227%22%20width=%2218%22%20height=%224%22%20fill=%22%23ccc%22/%3e%3crect%20x=%227%22%20y=%2213%22%20width=%228%22%20height=%2212%22%20fill=%22%23ccc%22/%3e%3crect%20x=%2217%22%20y=%2213%22%20width=%228%22%20height=%224%22%20fill=%22%23ccc%22/%3e%3crect%20x=%2217%22%20y=%2219%22%20width=%228%22%20height=%226%22%20fill=%22%23ccc%22/%3e%3c/svg%3e">
-    <!-- 引入 Tailwind CSS 以進行快速樣式設計 -->
+    <!-- Import Tailwind CSS for rapid styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 引入 Google Fonts 的 DotGothic16 字體 -->
+    <!-- Import Google Fonts 'DotGothic16' -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
     <style>
-        /* 自定義樣式 */
+        /* Custom Styles */
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
-            overflow: hidden; /* 防止最外層滾動 */
+            overflow: hidden; /* Prevent top-level scrolling */
         }
         
         body {
@@ -28,7 +28,7 @@
             transition: background 0.5s ease;
         }
 
-        /* [修改] 主內容區的高度由 JS 控制，以解決行動裝置 vh 單位的問題 */
+        /* [MODIFIED] Main content height is controlled by JS to solve mobile vh unit issues */
         #main-content {
             height: var(--app-height, 100vh);
         }
@@ -39,7 +39,7 @@
             background-color: rgba(255, 255, 255, 0.1);
             filter: blur(10px);
             opacity: 0.8;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.5s ease, transform 0.2s ease-out; /* Added transform transition */
             pointer-events: none;
         }
         
@@ -118,14 +118,14 @@
 </head>
 <body class="relative">
 
-    <!-- 背景裝飾元素 -->
+    <!-- Background decorative elements -->
     <div class="deco-shape" style="width: 200px; height: 150px; top: 10%; left: 5%; transform: rotate(20deg);"></div>
     <div class="deco-shape" style="width: 150px; height: 100px; top: 25%; right: 8%; transform: rotate(-30deg);"></div>
     <div class="deco-shape" style="width: 100px; height: 100px; bottom: 15%; left: 12%;"></div>
     <div class="deco-shape" style="width: 180px; height: 120px; bottom: 5%; right: 5%; transform: rotate(10deg);"></div>
     <div class="deco-shape" style="width: 80px; height: 80px; top: 50%; left: 20%;"></div>
 
-    <!-- 頂部圖標 -->
+    <!-- Top icons header -->
     <header id="main-header" class="fixed top-0 left-0 right-0 z-20 p-4 sm:p-6 text-white">
         <div class="flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -144,20 +144,20 @@
         </div>
     </header>
 
-    <!-- 主內容區域: [修改] 移除了 h-screen class，改由 style 中的 CSS 變數控制 -->
+    <!-- Main Content Area: [MODIFIED] Removed h-screen, height is now controlled by CSS variable -->
     <main id="main-content" class="w-full flex items-center justify-center p-4">
         <div class="embed-container bg-white rounded-none shadow-2xl overflow-hidden ring-2 ring-white/30">
-            <iframe id="content-iframe" src="https://traditional-calls-008686.framer.app/" class="w-full h-full border-0" title="主要嵌入內容" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe id="content-iframe" src="https://traditional-calls-008686.framer.app/" class="w-full h-full border-0" title="Main embedded content" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
     </main>
 
-    <!-- 全螢幕選單 -->
+    <!-- Fullscreen Menu -->
     <div id="fullscreen-menu" class="fixed inset-0 z-40 backdrop-blur-sm p-4 text-white opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out">
         <button id="menu-close-btn" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white p-2 rounded-none hover:bg-white/20">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8 pixelated"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/></svg>
         </button>
         <div class="h-full flex flex-col items-center justify-center text-center">
-            <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%20(1).png?raw=true" alt="網站Logo" class="menu-logo h-16 w-auto mb-12 mx-auto">
+            <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/%E8%9E%8D%E5%AA%92%E9%AB%94%20(1).png?raw=true" alt="Website Logo" class="menu-logo h-16 w-auto mb-12 mx-auto">
             <nav>
                 <ul class="space-y-6">
                     <li><a href="#" id="back-to-game" class="text-2xl font-medium tracking-wider px-4 py-2 rounded-none hover:bg-white/20 transition-colors">回到遊戲</a></li>
@@ -170,7 +170,7 @@
         </div>
     </div>
     
-    <!-- 彈出視窗 (Modal) -->
+    <!-- Modal Popup -->
     <div id="embed-modal" class="fixed inset-0 bg-black/60 p-4 py-8 flex justify-center items-start overflow-y-auto hidden z-50">
         <div id="modal-content-container" class="bg-white rounded-none shadow-lg flex flex-col scale-95 opacity-0 transition-all duration-300 ring-4 ring-white/50 mt-8 mb-8">
             <div class="flex-shrink-0 flex justify-end items-center p-2 border-b">
@@ -179,12 +179,12 @@
                 </button>
             </div>
             <div class="flex-grow p-1">
-                 <iframe id="modal-iframe" src="" class="w-full h-full border-0" title="彈出視窗嵌入內容" allowfullscreen></iframe>
+                 <iframe id="modal-iframe" src="" class="w-full h-full border-0" title="Modal popup embedded content" allowfullscreen></iframe>
             </div>
         </div>
     </div>
 
-    <!-- 全螢幕建議 -->
+    <!-- Fullscreen Suggestion -->
     <div id="fullscreen-suggestion-modal" class="fixed inset-0 bg-black/60 p-4 flex items-center justify-center z-50 hidden">
         <div class="bg-white rounded-none shadow-lg p-6 max-w-sm w-full text-center border-2 border-black">
             <h3 class="text-lg font-bold text-gray-800 mb-2">全螢幕體驗更佳</h3>
@@ -195,14 +195,14 @@
         </div>
     </div>
 
-    <!-- 封面 -->
+    <!-- Cover Page -->
     <div id="cover-page" class="fixed inset-0 bg-[#379BB2] z-[100] cursor-pointer">
-        <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/35_11zon.png?raw=true" alt="桌面版封面" class="cover-desktop w-full h-full object-cover">
-        <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/34_11zon.png?raw=true" alt="手機版封面" class="cover-mobile w-full h-full object-cover">
+        <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/35_11zon.png?raw=true" alt="Desktop version cover" class="cover-desktop w-full h-full object-cover" onerror="this.style.display='none'">
+        <img src="https://github.com/jayyang358297/Right-to-Disconnect/blob/main/34_11zon.png?raw=true" alt="Mobile version cover" class="cover-mobile w-full h-full object-cover" onerror="this.style.display='none'">
     </div>
 
     <script>
-        // --- DOM 元素選擇 ---
+        // --- DOM Element Selection ---
         const header = document.getElementById('main-header');
         const openBtn = document.getElementById('menu-open-btn');
         const menuCloseBtn = document.getElementById('menu-close-btn');
@@ -230,25 +230,25 @@
         const coverPage = document.getElementById('cover-page');
         const embedContainer = document.querySelector('.embed-container');
         
-        // --- 狀態與常數 ---
+        // --- State & Constants ---
         const originalGameUrl = 'https://traditional-calls-008686.framer.app/';
         const storiesUrl = 'https://exquisite-notes-282501.framer.app/';
-        let currentSizePreset = 'game'; // [新增] 用來追蹤目前的尺寸模式
+        let currentSizePreset = 'game'; // [NEW] Tracks the current size mode
 
-        // --- 實用函式 ---
+        // --- Utility Functions ---
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         }
 
-        // --- [新增] 動態設定應用程式高度的函式 ---
+        // --- [MODIFIED] Dynamically sets application height ---
         function setAppHeight() {
             const doc = document.documentElement;
-            // window.innerHeight 可以取得瀏覽器視窗的內部高度，這在行動裝置上比 100vh 更準確
+            // window.innerHeight gets the browser window's inner height, which is more accurate than 100vh on mobile
             doc.style.setProperty('--app-height', `${window.innerHeight}px`);
         }
 
         function setEmbedSize(sizePreset) {
-            currentSizePreset = sizePreset; // 更新目前的尺寸模式
+            currentSizePreset = sizePreset; // Update current size mode
             let maxWidth, aspectRatioW, aspectRatioH;
             const isMobile = window.innerWidth < 768;
 
@@ -266,7 +266,7 @@
                 embedContainer.style.maxWidth = `${maxWidth}px`;
                 embedContainer.style.aspectRatio = `${aspectRatioW} / ${aspectRatioH}`;
                 embedContainer.style.height = ''; 
-                // [修改] 將 maxHeight 稍微調小一點，為底部 UI 留出更多安全空間
+                // [MODIFIED] Slightly reduce maxHeight to leave more safe space for bottom UI
                 embedContainer.style.maxHeight = '95vh'; 
                 embedContainer.style.width = '100%';
             }
@@ -288,7 +288,7 @@
             }
         }
 
-        // --- 初始載入與事件監聽 ---
+        // --- Initial Load & Event Listeners ---
         coverPage.addEventListener('click', () => {
             coverPage.style.transform = 'translateY(-100%)';
             setTimeout(() => {
@@ -297,26 +297,62 @@
             }, 800);
         });
         
+        // [FIX] Modified the load event listener to fix the initial sizing issue.
         window.addEventListener('load', () => {
-            setAppHeight(); // 頁面載入時，先設定一次正確的高度
+            setAppHeight(); // Set the correct height on page load
+
+            const initialSizePreset = window.location.hash === '#stories' ? 'large' : 'game';
+
             if (window.location.hash === '#stories') {
-                loadContent(storiesUrl, 'large');
+                loadContent(storiesUrl, initialSizePreset);
             } else {
-                setEmbedSize('game');
+                // Call setEmbedSize on load.
+                // The initial calculation might be off, so we call it again
+                // after a short delay to ensure the browser has finalized the layout.
+                setEmbedSize(initialSizePreset);
+                setTimeout(() => setEmbedSize(initialSizePreset), 100);
             }
+            
             if(isIOS()){
                 safariSuggestion.classList.remove('hidden');
             }
         });
 
-        // [修改] 監聽視窗大小變化
+        // [MODIFIED] Listen for window resize
         window.addEventListener('resize', () => {
-             setAppHeight(); // 視窗變化時，重新設定高度
-             setEmbedSize(currentSizePreset); // 用當前的模式重新計算 iframe 尺寸
+             setAppHeight(); // Reset height on window change
+             setEmbedSize(currentSizePreset); // Recalculate iframe size with the current mode
+        });
+
+        // --- [NEW] Parallax effect for background shapes ---
+        // Store original transform values from the HTML style attribute
+        decoShapes.forEach(shape => {
+            shape.dataset.originalTransform = shape.style.transform || '';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+            const { innerWidth, innerHeight } = window;
+
+            // Calculate mouse position from -1 to 1 relative to the center of the screen
+            const x = (clientX / innerWidth - 0.5) * 2; 
+            const y = (clientY / innerHeight - 0.5) * 2;
+
+            decoShapes.forEach((shape, index) => {
+                // Use different intensity factors for each shape for a more varied movement
+                const factor = (index + 1) * 4; 
+                const transX = x * factor;
+                const transY = y * factor;
+                
+                const originalTransform = shape.dataset.originalTransform;
+
+                // Combine the original transform (like rotate) with the new translate value
+                shape.style.transform = `${originalTransform} translate(${transX}px, ${transY}px)`;
+            });
         });
 
 
-        // --- 背景切換函式 ---
+        // --- Background Switch Functions ---
         function setOriginalBackground() {
             document.body.style.backgroundColor = '#379BB2';
             document.body.style.backgroundImage = 'none';
@@ -329,7 +365,7 @@
             decoShapes.forEach(shape => shape.style.opacity = '0');
         }
 
-        // --- 選單與 Modal 控制 (維持不變) ---
+        // --- Menu & Modal Control (Unchanged) ---
         function openMenu() {
             menu.classList.remove('opacity-0', 'pointer-events-none');
             menu.classList.add('is-visible');
@@ -401,7 +437,7 @@
         function toggleFullScreen() {
             if (!document.fullscreenElement) {
                 document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`Error: ${err.message}`);
+                    console.log(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
                 });
             } else {
                 if (document.exitFullscreen) document.exitFullscreen();
